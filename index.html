@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>İyi Ki Doğdun Civan!</title>
+    <!-- Konfeti efekti için kütüphane -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Arka Plan Videosu Ayarları */
+        #arkaplan-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        /* Yazıların Okunması İçin Karartma Perdesi */
+        .karartma-perdesi {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 5, 5, 0.72);
+            z-index: -1;
+        }
+
+        /* Köşe Müzik Butonu */
+        .muzik-kontrol {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(26, 26, 26, 0.9);
+            border: 2px solid #ff6a00;
+            color: #ff6a00;
+            padding: 10px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(255, 106, 0, 0.4);
+            z-index: 100;
+            transition: transform 0.2s;
+        }
+        .muzik-kontrol:hover {
+            transform: scale(1.05);
+            background: #ff6a00;
+            color: #fff;
+        }
+
+        h1 {
+            color: #ff6a00;
+            font-size: 3em;
+            text-shadow: 0 0 20px #ff2a00;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        .alt-baslik {
+            color: #d4af37;
+            font-size: 1.2em;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+        }
+        .bolum-baslik {
+            color: #ff8800;
+            font-size: 1.6em;
+            margin: 50px auto 10px auto;
+            letter-spacing: 1px;
+        }
+        .bolum-alt {
+            color: #ccc;
+            font-size: 0.95em;
+            margin-bottom: 25px;
+        }
+        
+        /* Canlı Yaşam Sayacı Kutusu */
+        .sayac-kutusu {
+            background: rgba(20, 20, 20, 0.85);
+            border: 2px solid #00ffcc;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 750px;
+            margin: 0 auto 40px auto;
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.25);
+            backdrop-filter: blur(5px);
+        }
+        .sayac-kutusu h3 {
+            color: #00ffcc;
+            margin-top: 0;
+            font-size: 1.4em;
+        }
+        #yas-sayaci {
+            font-size: 1.2em;
+            color: #ffdd99;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .sayac-not {
+            font-size: 0.85em;
+            color: #00ffcc;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .pasta-kutusu {
+            background: rgba(20, 20, 20, 0.85);
+            border: 2px solid #ff6a00;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 850px;
+            margin: 0 auto 40px auto;
+            box-shadow: 0 0 30px rgba(255, 106, 0, 0.25);
+            backdrop-filter: blur(5px);
+        }
+        /* 2 Videoyu Yan Yana Tutan Alan */
+        .video-alani {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .video-alani video {
+            width: 100%;
+            max-width: 390px;
+            border-radius: 12px;
+            border: 1.5px solid #ff6a00;
+            box-shadow: 0 0 15px rgba(255, 106, 0, 0.3);
+            background-color: #000;
+        }
+        .mum {
+            font-size: 4em;
+            transition: all 0.5s ease;
+        }
+        button {
+            background: linear-gradient(45deg, #ff2a00, #ff8800);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 0 15px #ff5500;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        #mesaj {
+            display: none;
+            margin-top: 25px;
+            font-size: 1.3em;
+            color: #ffdd99;
+            line-height: 1.6;
+        }
+        .kartlar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1150px;
+            margin: 0 auto 30px auto;
+        }
+
+        /* Anime Karakter Kartları (Tıklanabilir Fotoğraflı) */
+        .anime-kart {
+            background: rgba(26, 26, 26, 0.9);
+            border-radius: 15px;
+            padding: 15px;
+            width: 250px;
+            border-top: 4px solid #888;
+            line-height: 1.5;
+            backdrop-filter: blur(4px);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .anime-kart:hover {
+            transform: translateY(-5px);
+        }
+        .anime-kart img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .rengoku { border-color: #ff4500; }
+        .gyomei { border-color: #8b9bb4; }
+        .eren { border-color: #00bbff; }
+
+        /* Hediye Kutusu Tasarımları */
+        .hediye-kart {
+            background: rgba(26, 26, 26, 0.9);
+            border-radius: 15px;
+            padding: 25px 20px;
+            width: 230px;
+            border-top: 4px solid #00ffcc;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            line-height: 1.5;
+            user-select: none;
+            backdrop-filter: blur(4px);
+        }
+        .hediye-kart:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+        }
+        .kutu-kapali {
+            padding: 20px 0;
+        }
+        .hediye-ikon {
+            font-size: 3.5em;
+            display: block;
+            margin-bottom: 10px;
+            animation: salla 2s infinite;
+        }
+        @keyframes salla {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-6deg); }
+            75% { transform: rotate(6deg); }
+        }
+        .kutu-acik {
+            display: none;
+            animation: acilis 0.5s ease;
+        }
+        @keyframes acilis {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .arkadas1 { border-color: #00ffcc; }
+        .arkadas2 { border-color: #ff3399; }
+        .arkadas3 { border-color: #3399ff; }
+        .arkadas4 { border-color: #aa66ff; }
+
+        /* Gizli Sürpriz ve Mektup Kutuları */
+        .gizli-surpriz-kutu {
+            background: rgba(40, 10, 50, 0.9);
+            border: 2px dashed #ff00ff;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 650px;
+            margin: 40px auto;
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.3);
+        }
+        .gizli-input {
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid #ff00ff;
+            background: #111;
+            color: #fff;
+            font-size: 1em;
+            margin-right: 10px;
+            outline: none;
+        }
+        #gizli-mesaj-1, #gizli-mesaj-2 {
+            display: none;
+            margin-top: 25px;
+            color: #ff99ff;
+            font-size: 1.1em;
+            line-height: 1.7;
+            text-align: left;
+            background: rgba(20, 5, 25, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            animation: acilis 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Arka Plan Videosu ve Karartma Perdesi -->
+    <video id="arkaplan-video" autoplay loop muted playsinline>
+        <source src="arkaplan.mp4" type="video/mp4">
+    </video>
+    <div class="karartma-perdesi"></div>
+
+    <!-- Sağ Üst Müzik Kontrol Butonu -->
+    <button class="muzik-kontrol" onclick="muzikToggle()">🎵 Cry Baby'yi Aç</button>
+
+    <!-- Arka Planda Çalışacak Müzik Dosyası (muzik.mp3) -->
+    <audio id="arka-muzik" loop>
+        <source src="muzik.mp3" type="audio/mp3">
+    </audio>
+
+    <h1 onclick="konfetiPatlat()">İYİ Kİ DOĞDUN CİVAN! 🔥</h1>
+    <div class="alt-baslik">YÜREĞİNİ ALEVLEDİR!</div>
+
+    <!-- CANLI YAŞAM SAYACI (18 Aralık 2011) -->
+    <div class="sayac-kutusu">
+        <h3>⏳ Civan'ın Destansı Yolculuk Sayacı</h3>
+        <p style="font-size: 0.9em; color: #ccc; margin: 5px 0;">Bu dünya bu kadar süredir bir efsane ağırlıyor:</p>
+        <div id="yas-sayaci">Hesaplanıyor...</div>
+        <div class="sayac-not">✨ "Sadece saniyeler geçiyor ama her saniye adın bir efsane olarak yazılıyor!"</div>
+    </div>
+
+    <div class="pasta-kutusu">
+        <!-- 2 Adet Yan Yana Video -->
+        <div class="video-alani">
+            <video id="vid1" src="video.mp4" controls loop playsinline onplay="videoCalmayaBasladi(this)"></video>
+            <video id="vid2" src="video2.mp4" controls loop playsinline onplay="videoCalmayaBasladi(this)"></video>
+        </div>
+
+        <div id="mum-ikon" class="mum">🕯️🎂🕯️</div>
+        <p id="yonerge">Dileğini tut ve Rengoku'nun ateşiyle mumu üfle!</p>
+        <button id="ufle-btn" onclick="mumuUfle()">Mumu Üfle 💨</button>
+        
+        <div id="mesaj">
+            "Doğum günü pastandaki mumdaki ateş gibi, içindeki ateş de hep yüksek olsun Civan!" 🔥✨
+        </div>
+    </div>
+
+    <!-- ANİME KARAKTERLERİ VE ÖZEL KONFETİLERİ -->
+    <h2 class="bolum-baslik">⚔️ Efsanevi Anime Kahramanlarının Mesajı ⚔️</h2>
+    <p class="bolum-alt">Karakterlerin üstüne tıklayarak güçlerini uyandır!</p>
+
+    <div class="kartlar">
+        <!-- Rengoku -->
+        <div class="anime-kart rengoku" onclick="karakterTikla('rengoku')">
+            <img src="rengoku.jpg" alt="Rengoku Kyojuro">
+            <h3>🔥 Rengoku Kyojuro</h3>
+            <p style="font-size: 0.9em; color: #ddd;">"Yüreğindeki alevi asla söndürme! Yaşın kaç olursa olsun göğsünü gere gere yaşa, doğum günün kutlu olsun Civan!"</p>
+        </div>
+        
+        <!-- Gyomei -->
+        <div class="anime-kart gyomei" onclick="karakterTikla('gyomei')">
+            <img src="gyomei.jpg" alt="Gyomei Himejima">
+            <h3>🪨 Gyomei Himejima</h3>
+            <p style="font-size: 0.9em; color: #ddd;">"Namu Amida Butsu... Taş Sütunu kadar sarsılmaz, güçlü, huzurlu ve hayırlı bir yeni yaş dilerim evlat."</p>
+        </div>
+        
+        <!-- Eren Yeager (AoT) -->
+        <div class="anime-kart eren" onclick="karakterTikla('eren')">
+            <img src="eren.jpg" alt="Eren Yeager">
+            <h3>⚔️ Eren Yeager</h3>
+            <p style="font-size: 0.9em; color: #ddd;">"İleriye bakmaktan asla vazgeçme! Hedeflerine ulaşana kadar savaşmaya devam et. Doğum günün kutlu olsun Civan!"</p>
+        </div>
+    </div>
+
+    <!-- 4 Adet Tıklanabilir Hediye Kutusu -->
+    <h2 class="bolum-baslik">🎁 Dostlarından Sürpriz Hediyeler 🎁</h2>
+    <p class="bolum-alt">Mesajları okumak için hediye kutularının üzerine tıkla!</p>
+    
+    <div class="kartlar">
+        <!-- 1. Hediye Kutusu -->
+        <div class="hediye-kart arkadas1" onclick="kutuAc(1)">
+            <div id="kapali-1" class="kutu-kapali">
+                <span class="hediye-ikon">🎁</span>
+                <strong>1. Hediye Kutusu</strong>
+                <p style="font-size: 0.85em; color: #aaa;">Açmak için tıkla</p>
+            </div>
+            <div id="acik-1" class="kutu-acik">
+                <h3>⚡ Alperen Sarpkaya</h3>
+                <p>"Seninle tanıştığım için o kadar mutluyum ki kısa zamanda ailemden biri gibi oldun ve senin yerin benim için diğer insanlardan tamamen farklı olucak ve biliyorum zamanında çok kırdım seni beni affetmeni istiyorum ve bundan sonra hep yanında olcağıma söz veriyorum İyiki Doğdun Nice Seneleree CİWANIMMMMM!!!"</p>
+            </div>
+        </div>
+
+        <!-- 2. Hediye Kutusu -->
+        <div class="hediye-kart arkadas2" onclick="kutuAc(2)">
+            <div id="kapali-2" class="kutu-kapali">
+                <span class="hediye-ikon">🎁</span>
+                <strong>2. Hediye Kutusu</strong>
+                <p style="font-size: 0.85em; color: #aaa;">Açmak için tıkla</p>
+            </div>
+            <div id="acik-2" class="kutu-acik">
+                <h3>🌸 Ecrin Büyüktepe</h3>
+                <p>"Nereden başlayacağımı bilemiyorum ama şunu bilmeni istiyorum ki hayatıma girdiğin için kendimi çok şanslı hissediyorum. Seni tanıyalı çok uzun zaman olmamasına rağmen benim için çok farklı ve özel bir yer edindin. Umarım bundan sonra hep güzel anılar biriktiririz. Ne olursa olsun aramızın bozulmasını istemiyorum çünkü sen benim için sıradan bir arkadaş değilsin. İyi ki tanımışım seni, iyi ki hayatımdasın. Hep mutlu ol, yüzün hep gülsün. Nice yaşlara , seni çok seviyorum BICIIMMM🫰🏻"</p>
+            </div>
+        </div>
+
+        <!-- 3. Hediye Kutusu -->
+        <div class="hediye-kart arkadas3" onclick="kutuAc(3)">
+            <div id="kapali-3" class="kutu-kapali">
+                <span class="hediye-ikon">🎁</span>
+                <strong>3. Hediye Kutusu</strong>
+                <p style="font-size: 0.85em; color: #aaa;">Açmak için tıkla</p>
+            </div>
+            <div id="acik-3" class="kutu-acik">
+                <h3>💪 Emine Çoğalan</h3>
+                <p>"CİVA SLM İLKOKUL ARKADAŞIM YÜZÜMÜ KAPATSANDA O FOTOĞRAFTA OLSUN YİNEDE İYİKİ VARSIN İYİKİ DOĞDUN İYİKİ BİZİM BİNGÖLLÜ ANİMECİMİSSİN💪"</p>
+            </div>
+        </div>
+
+        <!-- 4. Hediye Kutusu -->
+        <div class="hediye-kart arkadas4" onclick="kutuAc(4)">
+            <div id="kapali-4" class="kutu-kapali">
+                <span class="hediye-ikon">🎁</span>
+                <strong>4. Hediye Kutusu</strong>
+                <p style="font-size: 0.85em; color: #aaa;">Açmak için tıkla</p>
+            </div>
+            <div id="acik-4" class="kutu-acik">
+                <h3>👑 4. Arkadaşın Adı</h3>
+                <p>"Buraya 4. arkadaşın mesajı gelecektir."</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. GİZLİ ŞİFRELİ ALAN (Anime / Civan Şifresi) -->
+    <div class="gizli-surpriz-kutu">
+        <h3>🔮 1. Gizli Sürpriz Kiliti</h3>
+        <p style="font-size: 0.9em; color: #ddd;">İpucu: civan veya rengoku</p>
+        <input type="text" id="sifre-input-1" class="gizli-input" placeholder="Şifreyi gir...">
+        <button onclick="sifreyiKontrolEt1()">Kilidi Aç 🔓</button>
+        
+        <div id="gizli-mesaj-1">
+            🎉 <strong>Tebrikler Civan! İlk Gizli Sürprizi Buldun!</strong> 🎉<br>
+            "Bu site senin gibi efsane bir animeci kardeşimiz için hazırlandı. İyi ki hayatımızdasın kanka, beraber nice maceralara!"
+        </div>
+    </div>
+
+    <!-- 2. GİZLİ ŞİFRELİ ALAN (Alperen ve Civan Mektubu) -->
+    <div class="gizli-surpriz-kutu" style="border-color: #00ffcc; background: rgba(10, 40, 40, 0.9);">
+        <h3 style="color: #00ffcc;">📜 2. Gizli Kilitli Kardeşlik Mektubu</h3>
+        <p style="font-size: 0.9em; color: #ddd;">İpucu: alperen ve civan</p>
+        <input type="text" id="sifre-input-2" class="gizli-input" style="border-color: #00ffcc;" placeholder="Şifreyi gir...">
+        <button onclick="sifreyiKontrolEt2()" style="background: linear-gradient(45deg, #00ffcc, #0088ff);">Kilidi Aç 🔓</button>
+        
+        <div id="gizli-mesaj-2">
+            <p style="color: #00ffcc; margin-top: 0; font-weight: bold; text-align: center;">✨ ÖZEL GİZLİ MEKTUP ✨</p>
+            "Çok kötü bir dönem geçiriyordum seninle ve Ecrin'le tanışana kadar. İkiniz benim için aşırı özel insanlarsınız. Her zaman kaçmayı ve korkak gibi yaşamayı denedim ama artık buna bir son veriyoruz ve sen ve ben korktuğumuz şeylerin üstesinden geleceğiz ve sonsuza kadar birlikte olacağız! Fiziksel olarak yan yana olamasak bile ruhlarımız birbirine kenetlendiyse her zaman yananyız demek bu.<br><br>
+            <strong>DOĞUM GÜNÜN KUTLU OLSUN HAYATIMI GÜZELLEŞTİREN İNSAN!</strong> 🖤"
+        </div>
+    </div>
+
+    <script>
+        // CANLI YAŞAM SAYACI (18 Aralık 2011)
+        const dogumTarihi = new Date("2011-12-18T00:00:00");
+
+        function sayaciGuncelle() {
+            const simdi = new Date();
+            const fark = simdi - dogumTarihi;
+
+            const toplamSaniye = Math.floor(fark / 1000);
+            const gun = Math.floor(toplamSaniye / (3600 * 24));
+            const saat = Math.floor((toplamSaniye % (3600 * 24)) / 3600);
+            const dakika = Math.floor((toplamSaniye % 3600) / 60);
+            const saniye = toplamSaniye % 60;
+
+            document.getElementById("yas-sayaci").innerText = 
+                `${gun} Gün, ${saat} Saat, ${dakika} Dakika, ${saniye} Saniyedir bu dünyayı güzelleştiriyorsun! ✨`;
+        }
+        setInterval(sayaciGuncelle, 1000);
+        sayaciGuncelle();
+
+        // Müzik ve Video Kontrolleri
+        const muzik = document.getElementById("arka-muzik");
+        const vid1 = document.getElementById("vid1");
+        const vid2 = document.getElementById("vid2");
+
+        function videoCalmayaBasladi(calisanVideo) {
+            if (!muzik.paused) {
+                muzik.pause();
+                document.querySelector(".muzik-kontrol").innerText = "🎵 Cry Baby'yi Aç";
+            }
+            if (calisanVideo === vid1) {
+                vid2.pause();
+            } else {
+                vid1.pause();
+            }
+        }
+
+        function muzikToggle() {
+            if (muzik.paused) {
+                muzik.play();
+                vid1.pause();
+                vid2.pause();
+                event.target.innerText = "🔇 Cry Baby'yi Kapat";
+            } else {
+                muzik.pause();
+                event.target.innerText = "🎵 Cry Baby'yi Aç";
+            }
+        }
+
+        function konfetiPatlat() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        // Karakterlere Özel Konfeti Renkleri
+        function karakterTikla(karakter) {
+            if (karakter === 'rengoku') {
+                confetti({ particleCount: 120, spread: 80, colors: ['#ff4500', '#ff8800', '#ffea00'], origin: { y: 0.7 } });
+            } else if (karakter === 'gyomei') {
+                confetti({ particleCount: 120, spread: 80, colors: ['#8b9bb4', '#ffffff', '#444444'], origin: { y: 0.7 } });
+            } else if (karakter === 'eren') {
+                confetti({ particleCount: 120, spread: 80, colors: ['#00bbff', '#0044ff', '#ffffff'], origin: { y: 0.7 } });
+            }
+        }
+
+        function mumuUfle() {
+            document.getElementById("mum-ikon").innerHTML = "💨🎂💨";
+            document.getElementById("yonerge").style.display = "none";
+            document.getElementById("ufle-btn").style.display = "none";
+            document.getElementById("mesaj").style.display = "block";
+            konfetiPatlat();
+        }
+
+        function kutuAc(numara) {
+            document.getElementById("kapali-" + numara).style.display = "none";
+            document.getElementById("acik-" + numara).style.display = "block";
+            konfetiPatlat();
+        }
+
+        // 1. Şifre Kontrolü (civan veya rengoku)
+        function sifreyiKontrolEt1() {
+            const girilenSifre = document.getElementById("sifre-input-1").value.trim().toLowerCase();
+            if (girilenSifre === "civan" || girilenSifre === "rengoku") {
+                document.getElementById("gizli-mesaj-1").style.display = "block";
+                confetti({
+                    particleCount: 200,
+                    spread: 100,
+                    origin: { y: 0.5 }
+                });
+            } else {
+                alert("Yanlış şifre kanka! İpucu: civan veya rengoku 😉");
+            }
+        }
+
+        // 2. Şifre Kontrolü (alperen ve civan)
+        function sifreyiKontrolEt2() {
+            const girilenSifre = document.getElementById("sifre-input-2").value.trim().toLowerCase();
+            if (girilenSifre === "alperen ve civan" || girilenSifre === "alperencivan") {
+                document.getElementById("gizli-mesaj-2").style.display = "block";
+                confetti({
+                    particleCount: 250,
+                    spread: 120,
+                    origin: { y: 0.5 }
+                });
+            } else {
+                alert("Yanlış şifre kanka! İpucu: alperen ve civan 😉");
+            }
+        }
+    </script>
+
+</body>
+</html>

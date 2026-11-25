@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>İyi Ki Doğdun Civan!</title>
-    <!-- Konfeti efekti için kütüphane -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         body {
@@ -16,8 +15,6 @@
             min-height: 100vh;
             position: relative;
         }
-
-        /* Arka Plan Videosu Ayarları */
         #arkaplan-video {
             position: fixed;
             top: 0;
@@ -27,8 +24,6 @@
             object-fit: cover;
             z-index: -2;
         }
-
-        /* Yazıların Okunması İçin Karartma Perdesi */
         .karartma-perdesi {
             position: fixed;
             top: 0;
@@ -38,8 +33,6 @@
             background: rgba(10, 5, 5, 0.72);
             z-index: -1;
         }
-
-        /* Köşe Müzik Butonu */
         .muzik-kontrol {
             position: fixed;
             top: 20px;
@@ -60,7 +53,6 @@
             background: #ff6a00;
             color: #fff;
         }
-
         h1 {
             color: #ff6a00;
             font-size: 3em;
@@ -72,7 +64,19 @@
             color: #d4af37;
             font-size: 1.2em;
             letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+        .ozel-not {
+            color: #ffdd99;
+            font-size: 1.05em;
+            font-style: italic;
+            background: rgba(255, 106, 0, 0.15);
+            border: 1px solid rgba(255, 106, 0, 0.4);
+            padding: 12px 25px;
+            border-radius: 25px;
+            display: inline-block;
             margin-bottom: 40px;
+            box-shadow: 0 0 15px rgba(255, 106, 0, 0.2);
         }
         .bolum-baslik {
             color: #ff8800;
@@ -85,8 +89,6 @@
             font-size: 0.95em;
             margin-bottom: 25px;
         }
-        
-        /* Canlı Yaşam Sayacı Kutusu */
         .sayac-kutusu {
             background: rgba(20, 20, 20, 0.85);
             border: 2px solid #00ffcc;
@@ -114,7 +116,6 @@
             margin-top: 8px;
             font-style: italic;
         }
-
         .pasta-kutusu {
             background: rgba(20, 20, 20, 0.85);
             border: 2px solid #ff6a00;
@@ -125,7 +126,6 @@
             box-shadow: 0 0 30px rgba(255, 106, 0, 0.25);
             backdrop-filter: blur(5px);
         }
-        /* 2 Videoyu Yan Yana Tutan Alan */
         .video-alani {
             display: flex;
             flex-wrap: wrap;
@@ -176,8 +176,6 @@
             max-width: 1150px;
             margin: 0 auto 30px auto;
         }
-
-        /* Anime Karakter Kartları (Tıklanabilir Fotoğraflı) */
         .anime-kart {
             background: rgba(26, 26, 26, 0.9);
             border-radius: 15px;
@@ -204,8 +202,6 @@
         .rengoku { border-color: #ff4500; }
         .gyomei { border-color: #8b9bb4; }
         .eren { border-color: #00bbff; }
-
-        /* Hediye Kutusu Tasarımları */
         .hediye-kart {
             background: rgba(26, 26, 26, 0.9);
             border-radius: 15px;
@@ -248,8 +244,6 @@
         .arkadas2 { border-color: #ff3399; }
         .arkadas3 { border-color: #3399ff; }
         .arkadas4 { border-color: #aa66ff; }
-
-        /* Gizli Sürpriz ve Mektup Kutuları */
         .gizli-surpriz-kutu {
             background: rgba(40, 10, 50, 0.9);
             border: 2px dashed #ff00ff;
@@ -286,24 +280,22 @@
 </head>
 <body>
 
-    <!-- Arka Plan Videosu ve Karartma Perdesi -->
     <video id="arkaplan-video" autoplay loop muted playsinline>
         <source src="arkaplan.mp4" type="video/mp4">
     </video>
     <div class="karartma-perdesi"></div>
 
-    <!-- Sağ Üst Müzik Kontrol Butonu -->
     <button class="muzik-kontrol" onclick="muzikToggle()">🎵 Cry Baby'yi Aç</button>
 
-    <!-- Arka Planda Çalışacak Müzik Dosyası (muzik.mp3) -->
-    <audio id="arka-muzik" loop>
-        <source src="muzik.mp3" type="audio/mp3">
+    <audio id="arka-muzik" loop preload="auto">
+        <source src="https://raw.githubusercontent.com/alperensarpkaya0005-design/civan/main/muzik.mp3" type="audio/mpeg">
+        <source src="muzik.mp3" type="audio/mpeg">
     </audio>
 
     <h1 onclick="konfetiPatlat()">İYİ Kİ DOĞDUN CİVAN! 🔥</h1>
     <div class="alt-baslik">YÜREĞİNİ ALEVLEDİR!</div>
+    <div class="ozel-not">"Sana alıcak pahalı bir hediyem yoktu ama sana olan yeteneğimle sana bunu yapabildim :)"</div>
 
-    <!-- CANLI YAŞAM SAYACI (18 Aralık 2011) -->
     <div class="sayac-kutusu">
         <h3>⏳ Civan'ın Destansı Yolculuk Sayacı</h3>
         <p style="font-size: 0.9em; color: #ccc; margin: 5px 0;">Bu dünya bu kadar süredir bir efsane ağırlıyor:</p>
@@ -312,7 +304,6 @@
     </div>
 
     <div class="pasta-kutusu">
-        <!-- 2 Adet Yan Yana Video -->
         <div class="video-alani">
             <video id="vid1" src="video.mp4" controls loop playsinline onplay="videoCalmayaBasladi(this)"></video>
             <video id="vid2" src="video2.mp4" controls loop playsinline onplay="videoCalmayaBasladi(this)"></video>
@@ -327,26 +318,22 @@
         </div>
     </div>
 
-    <!-- ANİME KARAKTERLERİ VE ÖZEL KONFETİLERİ -->
     <h2 class="bolum-baslik">⚔️ Efsanevi Anime Kahramanlarının Mesajı ⚔️</h2>
     <p class="bolum-alt">Karakterlerin üstüne tıklayarak güçlerini uyandır!</p>
 
     <div class="kartlar">
-        <!-- Rengoku -->
         <div class="anime-kart rengoku" onclick="karakterTikla('rengoku')">
             <img src="rengoku.jpg" alt="Rengoku Kyojuro">
             <h3>🔥 Rengoku Kyojuro</h3>
             <p style="font-size: 0.9em; color: #ddd;">"Yüreğindeki alevi asla söndürme! Yaşın kaç olursa olsun göğsünü gere gere yaşa, doğum günün kutlu olsun Civan!"</p>
         </div>
         
-        <!-- Gyomei -->
         <div class="anime-kart gyomei" onclick="karakterTikla('gyomei')">
             <img src="gyomei.jpg" alt="Gyomei Himejima">
             <h3>🪨 Gyomei Himejima</h3>
             <p style="font-size: 0.9em; color: #ddd;">"Namu Amida Butsu... Taş Sütunu kadar sarsılmaz, güçlü, huzurlu ve hayırlı bir yeni yaş dilerim evlat."</p>
         </div>
         
-        <!-- Eren Yeager (AoT) -->
         <div class="anime-kart eren" onclick="karakterTikla('eren')">
             <img src="eren.jpg" alt="Eren Yeager">
             <h3>⚔️ Eren Yeager</h3>
@@ -354,12 +341,10 @@
         </div>
     </div>
 
-    <!-- 4 Adet Tıklanabilir Hediye Kutusu -->
     <h2 class="bolum-baslik">🎁 Dostlarından Sürpriz Hediyeler 🎁</h2>
     <p class="bolum-alt">Mesajları okumak için hediye kutularının üzerine tıkla!</p>
     
     <div class="kartlar">
-        <!-- 1. Hediye Kutusu -->
         <div class="hediye-kart arkadas1" onclick="kutuAc(1)">
             <div id="kapali-1" class="kutu-kapali">
                 <span class="hediye-ikon">🎁</span>
@@ -372,7 +357,6 @@
             </div>
         </div>
 
-        <!-- 2. Hediye Kutusu -->
         <div class="hediye-kart arkadas2" onclick="kutuAc(2)">
             <div id="kapali-2" class="kutu-kapali">
                 <span class="hediye-ikon">🎁</span>
@@ -385,7 +369,6 @@
             </div>
         </div>
 
-        <!-- 3. Hediye Kutusu -->
         <div class="hediye-kart arkadas3" onclick="kutuAc(3)">
             <div id="kapali-3" class="kutu-kapali">
                 <span class="hediye-ikon">🎁</span>
@@ -398,7 +381,6 @@
             </div>
         </div>
 
-        <!-- 4. Hediye Kutusu -->
         <div class="hediye-kart arkadas4" onclick="kutuAc(4)">
             <div id="kapali-4" class="kutu-kapali">
                 <span class="hediye-ikon">🎁</span>
@@ -412,7 +394,6 @@
         </div>
     </div>
 
-    <!-- 1. GİZLİ ŞİFRELİ ALAN (Anime / Civan Şifresi) -->
     <div class="gizli-surpriz-kutu">
         <h3>🔮 1. Gizli Sürpriz Kiliti</h3>
         <p style="font-size: 0.9em; color: #ddd;">İpucu: civan veya rengoku</p>
@@ -425,7 +406,6 @@
         </div>
     </div>
 
-    <!-- 2. GİZLİ ŞİFRELİ ALAN (Alperen ve Civan Mektubu) -->
     <div class="gizli-surpriz-kutu" style="border-color: #00ffcc; background: rgba(10, 40, 40, 0.9);">
         <h3 style="color: #00ffcc;">📜 2. Gizli Kilitli Kardeşlik Mektubu</h3>
         <p style="font-size: 0.9em; color: #ddd;">İpucu: alperen ve civan</p>
@@ -440,7 +420,6 @@
     </div>
 
     <script>
-        // CANLI YAŞAM SAYACI (18 Aralık 2011)
         const dogumTarihi = new Date("2011-12-18T00:00:00");
 
         function sayaciGuncelle() {
@@ -459,7 +438,6 @@
         setInterval(sayaciGuncelle, 1000);
         sayaciGuncelle();
 
-        // Müzik ve Video Kontrolleri
         const muzik = document.getElementById("arka-muzik");
         const vid1 = document.getElementById("vid1");
         const vid2 = document.getElementById("vid2");
@@ -478,13 +456,16 @@
 
         function muzikToggle() {
             if (muzik.paused) {
-                muzik.play();
+                muzik.play().then(() => {
+                    document.querySelector(".muzik-kontrol").innerText = "🔇 Cry Baby'yi Kapat";
+                }).catch(e => {
+                    console.log("Müzik çalma hatası: ", e);
+                });
                 vid1.pause();
                 vid2.pause();
-                event.target.innerText = "🔇 Cry Baby'yi Kapat";
             } else {
                 muzik.pause();
-                event.target.innerText = "🎵 Cry Baby'yi Aç";
+                document.querySelector(".muzik-kontrol").innerText = "🎵 Cry Baby'yi Aç";
             }
         }
 
@@ -496,7 +477,6 @@
             });
         }
 
-        // Karakterlere Özel Konfeti Renkleri
         function karakterTikla(karakter) {
             if (karakter === 'rengoku') {
                 confetti({ particleCount: 120, spread: 80, colors: ['#ff4500', '#ff8800', '#ffea00'], origin: { y: 0.7 } });
@@ -521,7 +501,6 @@
             konfetiPatlat();
         }
 
-        // 1. Şifre Kontrolü (civan veya rengoku)
         function sifreyiKontrolEt1() {
             const girilenSifre = document.getElementById("sifre-input-1").value.trim().toLowerCase();
             if (girilenSifre === "civan" || girilenSifre === "rengoku") {
@@ -536,7 +515,6 @@
             }
         }
 
-        // 2. Şifre Kontrolü (alperen ve civan)
         function sifreyiKontrolEt2() {
             const girilenSifre = document.getElementById("sifre-input-2").value.trim().toLowerCase();
             if (girilenSifre === "alperen ve civan" || girilenSifre === "alperencivan") {
